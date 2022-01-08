@@ -21,7 +21,9 @@ Kullanıcı kendisine ait alana belge ve klasör ekleyebilir. Sadece kendisi gö
 Demoyu [buradan](http://demodocumentmanager.snevars.com/) inceleye bilirsiniz.
 
 ## Kullanılan teknolojiler
-- [AngularJS] -
-- [Jquery] -
-- [Bootstrap] -
-- [.Net asmx WebService] -
+- AngularJS v1.2
+- Jquery v3.5.1
+- Bootstrap 4
+- Alertfiyjs
+- Font Awesome 5
+- .Net asmx WebService
