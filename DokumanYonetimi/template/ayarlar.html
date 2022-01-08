@@ -1,0 +1,261 @@
+﻿<div class="d-flex" id="wrapper" ng-cloak ng-controller="ayarlarController">
+    <!-- Sidebar -->
+    <div class="bg-dark shadow" id="sidebar-wrapper">
+        <div class="sidebar-heading bg-dark" style="height: 44px!important">
+            <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="35" alt="Dokuman Yönetimi">
+            <small>Doküman Yönetimi</small>
+        </div>
+        <div class="list-group list-group-flush mt-3">
+            <a class="btn list-group-item list-group-item-action bg-dark text-light border-0" ng-click="MenuAyarlarSelect('v-yenikullanici-tab')" id="v-yenikullanici-tab" data-toggle="pill" data-target="#v-yenikullanici" role="tab" aria-controls="v-yenikullanici-tab" aria-selected="true">Kullanıcılar</a>
+            <a class="btn list-group-item list-group-item-action bg-dark text-light border-0" ng-click="MenuAyarlarSelect('v-yetkiler-tab')" id="v-yetkiler-tab" data-toggle="pill" data-target="#v-yetkiler" role="tab" aria-controls="v-yetkiler-tab" aria-selected="true">Yetkiler</a>
+            <!--<a class="btn list-group-item list-group-item-action bg-dark text-light border-0" ng-click="MenuAyarlarSelect('v-dokumanyet-tab')" id="v-dokumanyet-tab" data-toggle="pill" data-target="#v-dokumanyet" role="tab" aria-controls="v-dokumanyet-tab" aria-selected="true">Dökuman Yetkileri</a>-->
+            <a class="btn list-group-item list-group-item-action bg-dark text-light border-0" ng-click="MenuAyarlarSelect('v-istenilenbel-tab')" id="v-istenilenbel-tab" data-toggle="pill" data-target="#v-istenilenbel" role="tab" aria-controls="v-istenilenbel-tab" aria-selected="true">İstenilen Belgeler</a>
+        </div>
+    </div>
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom" style="height: 45px!important">
+            <a id="menu-toggle" class=" btn d-md-none d-block" role="button">
+                <span class="navbar-toggler-icon"></span>
+            </a>
+            <ul class="nav ml-auto mt-2 mt-lg-0 ">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#/">Anasayfa</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" ng-click="openDrop('logoption')">
+                        {{Menu.KullaniciAdSoyad}}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" id="logoption" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#/ayarlar" ng-cloak ng-if="Menu.Ref_Unvan!=3">Ayarlar</a>
+                        <a class="dropdown-item" ng-click="ParolaY()">Parola Değiştir</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="Cikis()">Çıkış <i class="fal fa-sign-out-alt float-right mt-2"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div class="tab-content p-3" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-yenikullanici" role="tabpanel" aria-labelledby="v-yenikullanici-tab">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="input-group">
+                            <input class="form-control form-control-sm" placeholder="Kullanıcı Arama" ng-model="searchKull" autocomplete="off" ng-change="KullaniciArama(searchKull)" />
+                            <a id="refresh" class="btn" role="button" ng-click="SonKullanicilar()">
+                                <i class="fal fa-redo-alt text-success"></i><span class="mx-2">Yenile</span>
+                            </a>
+
+                        </div>
+                        <div style="height:calc( 100vh - 105px ); overflow-y:auto">
+                            <table class="table" style="font-size:85%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Email</th>
+                                        <th>Unvan</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-cloak>
+                                    <tr ng-repeat="a in son20Kullanici | filter:searchKull" ng-if="!(mSearchSonuc.length>0 && mSearchSonucShow)" ng-class="{'text-danger': !a.IsAktif}">
+                                        <td>{{$index+1}}</td>
+                                        <td><span ng-bind-html="a.AdSoyad | searchfilter:searchKull"></span></td>
+                                        <td>{{a.Mail}}</td>
+                                        <td>{{a.Unvan}}</td>
+                                        <td><a ng-class="{'text-danger': !a.IsAktif}" class="text-primary" ng-click="KullaniciDetay(a.KullaniciID)"><i class="fa fa-sticky-note"></i> Detay</a></td>
+                                    </tr>
+
+                                    <tr ng-repeat="a in mSearchSonuc" ng-if="mSearchSonuc.length>0 && mSearchSonucShow" ng-cloak>
+                                        <td>-</td>
+                                        <td><span ng-bind-html="a.AdSoyad | searchfilter:searchKull"></span></td>
+                                        <td>{{a.Mail}}</td>
+                                        <td>{{a.Unvan}}</td>
+                                        <td><a ng-class="{'text-danger': !a.IsAktif}" class="text-primary" ng-click="KullaniciDetay(a.KullaniciID)"><i class="fa fa-sticky-note"></i> Detay</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="m-2">
+                            <button class="btn btn-sm btn-secondary float-right my-3 ml-2" type="button" ng-click="YeniKullanici()">Yeni Kullanici</button>
+                            <button class="btn btn-sm btn-success float-right my-3" type="button" ng-disabled="!(ykullanici.$valid && msonuc)" ng-click="YeniKullaniciKaydet(kullaniciDetay)">Kaydet</button>
+                        </div><br />
+                        <ng-form class="mt-3" name="ykullanici">
+                            <div id="pform" style="margin-top:10px; ">
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">AD</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control form-control-sm border-secondary" name="pAd" ng-model="kullaniciDetay.Ad" required autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">SOYAD</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control form-control-sm border-secondary" name="pSoyad" ng-model="kullaniciDetay.Soyad" required autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">UNVAN</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control form-control-sm border-secondary" name="pUnvan" ng-model="kullaniciDetay.Ref_Unvan" required>
+                                            <option value="3">Kullanıcı</option>
+                                            <option value="2">Firma Yetkilisi</option>
+                                            <option value="1" ng-if="kullaniciDetay.Ref_Unvan==1">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">EMAİL</label>
+                                    <div class="col-lg-10">
+                                        <input id="mMail" type="email" class="form-control form-control-sm border-secondary" name="pMail" ng-model="kullaniciDetay.Mail" required autocomplete="off" ng-blur="MailKontrol(kullaniciDetay.Mail,kullaniciDetay.KullaniciID)">
+                                        <p class="small text-danger" ng-if="!msonuc"> {{gecersizMail}} email adresi kullanılamaz! Başka bir email adresi giriniz.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">TELEFON</label>
+                                    <div class="col-lg-10">
+                                        <input id="pTel" type="tel" class="form-control form-control-sm border-secondary" maxlength="12" name="pTel" ng-model="kullaniciDetay.Telefon">
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">PAROLA</label>
+                                    <div class="col-lg-10 input-group">
+                                        <input id="pMailp" type="password" class="form-control form-control-sm border-secondary" name="mPass" ng-model="kullaniciDetay.Parola" autocomplete="off" ng-disabled="kullaniciDetay.KullaniciID!=0" >
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-sm small bg-white border-secondary" ng-click="RandomParola()" ng-disabled="kullaniciDetay.KullaniciID!=0"><i class="fa fa-asterisk text-success"></i></button>
+                                            <button type="button" class="btn btn-sm small bg-white border-secondary" onclick="$('#pMailp').prop('type', 'sss');" ng-click="eyeoff=true" ng-show="!eyeoff" ng-disabled="kullaniciDetay.KullaniciID!=0"><i class="fa fa-eye"></i></button>
+                                            <button type="button" class="btn btn-sm small bg-white border-secondary" onclick="$('#pMailp').prop('type', 'password')" ng-click="eyeoff=false" ng-show="eyeoff" ng-disabled="kullaniciDetay.KullaniciID!=0"><i class="fa fa-eye-slash"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">AKTİF</label>
+                                    <div class="col-lg-10">
+                                        <div class="custom-control custom-checkbox mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="pAktif" ng-model="kullaniciDetay.IsAktif">
+                                            <label class="custom-control-label" for="pAktif">{{kullaniciDetay.IsAktif?'Kullanıcı Aktif':'Kullanıcı Pasif'}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="offset-1  col-10 mt-4">
+                                    <h6 class="card-title col-lg-6">YETKİLER</h6>
+                                    <hr style="width:300px;float:left;" class="mt-0" />
+                                </div>
+
+
+                                <div class="form-group row  col-12">
+                                    <div class="offset-2 col-lg-10">
+                                        <div class="custom-control custom-checkbox mr-sm-2" ng-repeat="y in kullaniciDetay.Yetkiler" ng-if="y.IsAktif">
+                                            <input type="checkbox" class="custom-control-input" id="customControlAutosizing1{{y.YetkiID}}" ng-model="y.Value">
+                                            <label class="custom-control-label" for="customControlAutosizing1{{y.YetkiID}}">{{y.YetkiAdi}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="v-yetkiler" role="tabpanel" aria-labelledby="v-yetkiler-tab">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div>
+                            <table class="table" style="font-size:85%">
+                                <thead>
+                                    <tr>
+                                        <th>Yetki Adı</th>
+                                        <th>Düzenleme</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-cloak>
+                                    <tr ng-repeat="a in fyetkiler " ng-class="{'text-danger': !a.IsAktif}">
+                                        <td><span ng-bind-html="a.YetkiAdi"></span></td>
+                                        <td>{{a.Duzenleme?'Aktif':'Sadece Görüntüleme'}}</td>
+                                        <td><a ng-class="{'text-danger': !a.IsAktif}" class="text-primary" ng-click="YetkiDetay(a)"><i class="fa fa-sticky-note"></i> Detay</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="m-2">
+                            <button class="btn btn-sm btn-secondary float-right my-3 ml-2" type="button" ng-click="YeniKullanici()">Yeni Yetki</button>
+                            <button class="btn btn-sm btn-success float-right my-3" type="button" ng-disabled="!yyetki.$valid" ng-click="YeniYetkiKaydet(yeniYetki)">Kaydet</button>
+                        </div><br />
+                        <ng-form class="mt-3" name="yyetki">
+                            <div id="pform" style="margin-top:10px; ">
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">YETKİ ADI</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control form-control-sm border-secondary" name="pAd" ng-model="yeniYetki.YetkiAdi" required autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">AKTİF</label>
+                                    <div class="col-lg-10">
+                                        <div class="custom-control custom-checkbox mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="yAktif" ng-model="yeniYetki.IsAktif">
+                                            <label class="custom-control-label" for="yAktif">{{yeniYetki.IsAktif?'Yetki Aktif':'Yetki Pasif'}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row col-12">
+                                    <label class="col-lg-2 text-right control-label col-form-label">DÜZENLEME</label>
+                                    <div class="col-lg-10">
+                                        <div class="custom-control custom-checkbox mr-sm-2">
+                                            <input type="checkbox" class="custom-control-input" id="yDuzenleme" ng-model="yeniYetki.Duzenleme">
+                                            <label class="custom-control-label" for="yDuzenleme">{{yeniYetki.Duzenleme?'Doküman Düzenleme Aktif':'Sadece Doküman Görüntüleme'}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+
+            </div>
+            <div ng-if="false" class="tab-pane fade show" id="v-dokumanyet" role="tabpanel" aria-labelledby="v-dokumanyet-tab">
+                tüm dokumanlar
+            </div>
+            <div class="tab-pane fade show container" id="v-istenilenbel" role="tabpanel" aria-labelledby="v-istenilenbel-tab" style="height:calc(100vh - 100px);overflow:auto">
+                <div class="form-group row col-8">
+                    <label class="col-md-3 text-right control-label col-form-label">YENİ BELGE</label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control form-control-sm border-secondary" name="istbel" ng-model="yeniIstBel" autocomplete="off">
+                    </div>
+                    <div class="col-md-2 pt-1">
+                        <button class="btn btn-sm btn-primary btn-block" type="button" ng-click="YeniIstBelgeEkle(yeniIstBel)">Ekle</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Belge Adı</th>
+                            <th>Firma Aktif</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="belge in tumIstenilenList">
+                            <td>{{belge.BelgeAdi}}</td>
+                            <td><button class="btn btn-sm btn-{{belge.IsAktif?'success':'secondary'}}" ng-click="IstenilenBelgeAktifEt(belge)">{{belge.IsAktif?'İptal Et':'Aktif Et'}}</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("input[type=text]").keyup(function () {
+                this.value = this.value = this.value.toLocaleUpperCase('tr-TR');
+            });
+        });
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+</div>

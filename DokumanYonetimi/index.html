@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Doküman Yönetimi</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Assets/bootstrap-4.5.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="Assets/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="Assets/alertifyjs/css/alertify.min.css" rel="stylesheet" />
+    <link href="Css/sidebar.css" rel="stylesheet" />
+    <link href="Css/login.css" rel="stylesheet" />
+    <link href="Css/loading-bar.min.css" rel="stylesheet" />
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        /* Track */
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #76838f;
+            border-radius: 10px;
+        }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        html {
+            font-size: 80%;
+        }
+
+        body {
+            min-width: 305px !important
+        }
+
+        .nav .nav-link {
+            color: #000;
+        }
+
+            .nav .nav-link:hover {
+                opacity: 0.5
+            }
+
+        .nav-icon-font {
+            font-size: 15px
+        }
+
+        .viewList a.active {
+            color: red
+        }
+
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+
+        .icon::before {
+            display: inline-block;
+            line-height: inherit !important;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            font-family: "Font Awesome 5 Pro";
+            line-height: 1;
+        }
+
+        .folder::before {
+            color: #FFD04E;
+            font-weight: 900;
+            content: "\f07b";
+        }
+
+        .word::before {
+            color: #305fbd;
+            font-weight: 900;
+            content: "\f1c2";
+        }
+
+        .pdf::before {
+            color: #ae201f;
+            font-weight: 900;
+            content: "\f1c1";
+        }
+
+        .other::before {
+            color: #3e4c61;
+            font-weight: 900;
+            content: "\f15c";
+        }
+
+
+        table .t-p-6 {
+        }
+
+        /* Sağ click için gerekli */
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently*/
+        }
+
+        #items {
+            list-style: none;
+            margin: 0px;
+            padding-left: 0px;
+            width: 105px;
+            color: #333333;
+        }
+
+        .cntnr {
+            display: none;
+            position: fixed;
+            border: 1px solid #B2B2B2;
+            background: #F9F9F9;
+            box-shadow: 3px 3px 2px #E9E9E9;
+            border-radius: 4px;
+        }
+
+        #items :hover {
+            color: white;
+            background: #284570;
+            border-radius: 2px;
+        }
+
+        #viewk-content tbody tr:hover {
+            background-color: rgba(128,128,128,0.1);
+        }
+
+        #viewk-content tbody tr.active {
+            background-color: rgba(128,128,128,0.1);
+        }
+
+        .front:hover {
+            bottom: 2px;
+            left: 2px;
+            box-shadow: 0px 0px 4px -2px #000;
+        }
+
+        .front.active {
+            bottom: 2px;
+            left: 2px;
+            box-shadow: 0px 0px 4px -2px #000;
+        }
+
+        #loading-bar {
+            padding-bottom: 10px;
+        }
+
+            #loading-bar .bar {
+                position: relative;
+                height: 5px !important;
+                padding: 0px 10px;
+            }
+        /* Sağ click için gerekli SON*/
+    </style>
+</head>
+<body ng-app="myApp" ng-controller="mainController" ng-cloak>
+    <ng-view></ng-view>
+    <div class="modal" id="parolayenileme" tabindex="-1" role="dialog" aria-labelledby="modal-terms" aria-hidden="true" style="top: 25%;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content pt-2">
+                <div class="modal-body">
+                    <div class="form-group row col-12">
+                        <label class="col-lg-4 text-right control-label col-form-label">ESKİ PAROLA</label>
+                        <div class="col-lg-8 input-group">
+                            <input id="ppold" type="password" class="form-control form-control-sm border-secondary" name="ppold" maxlength="8" ng-model="oldpass" autocomplete="off">
+                            <div class="input-group-append" style="max-height:30px">
+                                <button type="button" class="btn btn-sm small bg-white border-secondary" onclick="$('#ppold').prop('type', 'sss');" ng-click="eyeoffold=true" ng-show="!eyeoffold"><i class="fa fa-eye"></i></button>
+                                <button type="button" class="btn btn-sm small bg-white border-secondary" onclick="$('#ppold').prop('type', 'password')" ng-click="eyeoffold=false" ng-show="eyeoffold"><i class="fa fa-eye-slash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row col-12">
+                        <label class="col-lg-4 text-right control-label col-form-label">YENİ PAROLA</label>
+                        <div class="col-lg-8 input-group">
+                            <input id="ppnew" type="password" class="form-control form-control-sm border-secondary" maxlength="8" name="ppnew" ng-model="newpass" autocomplete="off">
+                            <div class="input-group-append" style="max-height:30px">
+                                <button type="button" class="btn btn-sm small bg-white border-secondary" ng-click="RandomParolaY()"><i class="fa fa-asterisk text-success"></i></button>
+                                <button type="button" class="btn btn-sm small bg-white border-secondary" onclick="$('#ppnew').prop('type', 'sss');" ng-click="eyeoff=true" ng-show="!eyeoff"><i class="fa fa-eye"></i></button>
+                                <button type="button" class="btn btn-sm small bg-white border-secondary" onclick="$('#ppnew').prop('type', 'password')" ng-click="eyeoff=false" ng-show="eyeoff"><i class="fa fa-eye-slash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" style="border-radius:inherit" ng-click="parolaKaydet(newpass,oldpass)">Değiştir</button>
+                    <button type="button" class="btn btn-secondary" style="border-radius:inherit" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="Assets/bootstrap-4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="Assets/alertifyjs/alertify.min.js"></script>
+    <script src="Assets/angularjs/angular.min.js"></script>
+    <script src="Assets/angularjs/angular-route.min.js"></script>
+    <script src="Assets/angularjs/angular-cookies.min.js"></script>
+    <script src="Assets/angularjs/angular-sanitize.min.js"></script>
+    <script src="Assets/loadin-bar.min.js"></script>
+
+    <script src="Controller/App.js"></script>
+    <script src="Controller/Services.js"></script>
+    <script src="Controller/LoginController.js"></script>
+    <script src="Controller/ayarlarController.js"></script>
+
+</body>
+</html>

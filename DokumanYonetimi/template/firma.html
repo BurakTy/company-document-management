@@ -1,0 +1,132 @@
+﻿<div class="d-flex" id="wrapper" ng-cloak ng-controller="ayarlarController">
+    <!-- Sidebar -->
+    <div class="bg-dark shadow" id="sidebar-wrapper">
+        <div class="sidebar-heading bg-dark" style="height: 44px!important">
+            <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="35" alt="Dokuman Yönetimi">
+            <small>Doküman Yönetimi</small>
+        </div>
+    </div>
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom" style="height: 45px!important">
+            <a id="menu-toggle" class=" btn d-md-none d-block" role="button">
+                <span class="navbar-toggler-icon"></span>
+            </a>
+            <ul class="nav ml-auto mt-2 mt-lg-0 ">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#/">Anasayfa</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" ng-click="openDrop('logoption')">
+                        {{Menu.KullaniciAdSoyad}}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" id="logoption" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#/ayarlar" ng-cloak ng-if="Menu.Ref_Unvan!=3">Ayarlar</a>
+                        <a class="dropdown-item">Parola Değiştir</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="Cikis()">Çıkış <i class="fal fa-sign-out-alt float-right mt-2"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="row p-3">
+            <div class="col-md-6 col-sm-12">
+                <h6>FİRMA BİLGİLERİ</h6>
+                <ng-form class="mt-3" name="firmaBil">
+                    <div id="pform" style="margin-top:10px; ">
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">* UNVAN</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control form-control-sm border-secondary" maxlength="300" name="pAd" ng-model="firmaBil.Unvan" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">* TELEFON</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control form-control-sm border-secondary" name="ptel" maxlength="12" ng-model="firmaBil.Telefon" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">* EMAİL</label>
+                            <div class="col-lg-10">
+                                <input id="mMail" type="email" class="form-control form-control-sm border-secondary" name="pMail" ng-model="firmaBil.Mail" required autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">* ADRES</label>
+                            <div class="col-lg-10">
+                                <input id="pAdres" type="text" class="form-control form-control-sm border-secondary" maxlength="500" name="pAdres" ng-model="firmaBil.Adres" required>
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">VERGİ NO</label>
+                            <div class="col-lg-10">
+                                <input id="pVNo" type="text" class="form-control form-control-sm border-secondary" maxlength="50" name="pVNO" ng-model="firmaBil.VNo">
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">VERGİ ADRESİ</label>
+                            <div class="col-lg-10">
+                                <input id="pVDaire" type="text" class="form-control form-control-sm border-secondary" maxlength="50" name="pVDaire" ng-model="firmaBil.VDaire">
+                            </div>
+                        </div>
+
+                    </div>
+                </ng-form>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <h6>FİRMA YETKİLİSİ</h6>
+                <ng-form class="mt-3" name="yfkullanici">
+                    <div id="pform" style="margin-top:10px; ">
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">AD</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control form-control-sm border-secondary" name="pAd" ng-model="kullaniciDetay.Ad" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">SOYAD</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control form-control-sm border-secondary" name="pSoyad" ng-model="kullaniciDetay.Soyad" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">EMAİL</label>
+                            <div class="col-lg-10">
+                                <input id="kMail" type="email" class="form-control form-control-sm border-secondary" name="kMail" ng-model="kullaniciDetay.Mail" required autocomplete="off" ng-blur="MailKontrol(kullaniciDetay.Mail)">
+                                <p class="small text-danger" ng-if="!msonuc"> {{gecersizMail}} email adresi kullanılamaz! Başka bir email adresi giriniz.</p>
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">TELEFON</label>
+                            <div class="col-lg-10">
+                                <input id="pTel" type="tel" class="form-control form-control-sm border-secondary" maxlength="12" name="pTel" ng-model="kullaniciDetay.Telefon">
+                            </div>
+                        </div>
+                        <div class="form-group row col-12">
+                            <label class="col-lg-2 text-right control-label col-form-label">PAROLA</label>
+                            <div class="col-lg-10 input-group">
+                                <input id="pMailp" type="text" class="form-control form-control-sm border-secondary" name="mPass" ng-model="kullaniciDetay.Parola" autocomplete="off" required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm small bg-white border-secondary" ng-click="RandomParola()"><i class="fa fa-asterisk text-success"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+            <div class="px-5 m-2">
+                <button class="btn btn-sm btn-success float-right my-3" type="button" ng-disabled="!(yfkullanici.$valid && firmaBil.$valid) " ng-click="FirmaKayit(firmaBil,kullaniciDetay)">Kaydet</button>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("input[type=text]").keyup(function () {
+                this.value = this.value = this.value.toLocaleUpperCase('tr-TR');
+            });
+        });
+    </script>
+</div>

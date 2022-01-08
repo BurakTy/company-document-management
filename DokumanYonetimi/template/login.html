@@ -1,0 +1,34 @@
+﻿<div class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mt-5 mx-auto" ng-controller="loginController">
+    <div class="card card0 border-0 col-lg-6 col-md-8 col-sm-12 float-right">
+        <div class="card2 card border-0 px-4 py-5">
+            <div class="row px-3">
+                <label class="mb-1">
+                    <h6 class="mb-0 text-sm">Email Adres</h6>
+                </label>
+                <input class="mb-4" type="text" name="email" placeholder="Email Adresi Giriniz" ng-model="user.Kullanici">
+            </div>
+            <div class="row px-3">
+                <label class="mb-1">
+                    <h6 class="mb-0 text-sm">Parola</h6>
+                </label>
+                <input type="password" name="password" placeholder="Parola Giriniz" ng-model="user.Parola">
+            </div>
+            <div class="row px-3 mb-4">
+                <div class="custom-control custom-checkbox custom-control-inline d-none">
+                    <input id="chk1" type="checkbox" name="chk" class="custom-control-input" ng-model="user.BeniHatirla">
+                    <label for="chk1" class="custom-control-label text-sm">Beni Hatırla</label>
+                </div>
+                <a href="#" class="ml-auto mb-0 text-sm">Parolamı Unuttum</a>
+            </div>
+            <div class="row mb-3 px-3">
+                <button type="button" class="btn btn-login text-center" ng-click="Login(user)">Giriş</button>
+            </div>
+             <div class="row mb-4 px-3 d-none"><small class="font-weight-bold">Don't have an account? <a class="text-danger ">Register</a></small> </div>
+        </div>
+        <div class="bg-blue py-4">
+            <div class="row px-3">
+                <small class="ml-4 ml-sm-5 mb-2"><img src="https://angular.io/assets/images/logos/angular/angular.svg" width="25" alt="Dokuman Yönetimi"> &copy; 2020</small>
+            </div>
+        </div>
+    </div>
+</div>

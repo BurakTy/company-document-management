@@ -1,0 +1,337 @@
+﻿<div class="d-flex" id="wrapper" ng-controller="anasayfaController">
+
+    <!-- Sidebar -->
+    <div class="bg-dark shadow" id="sidebar-wrapper">
+        <div class="sidebar-heading bg-dark" style="height: 44px!important">
+            <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="35" alt=" Dokuman Yönetimi">
+            <small>Doküman Yönetimi</small>
+        </div>
+        <div class="list-group list-group-flush mt-3">
+            <a id="menuP" class="btn list-group-item list-group-item-action bg-dark text-light  d-block d-sm-none"><span class="float-right">{{Menu.KullaniciAdSoyad}}</span></a>
+            <a id="menu{{m.ID}}" class="btn list-group-item list-group-item-action bg-dark text-light" ng-click="MenuSelect(m.ID,m.Click)" ng-repeat="m in Menuler">{{m.MenuAd}}</a>
+            <a id="menuA" class="btn list-group-item list-group-item-action bg-dark text-light  d-block d-sm-none" href="#/ayarlar">Ayarlar</a>
+            <a id="menuP" class="btn list-group-item list-group-item-action bg-dark text-light  d-block d-sm-none">Parola Değiştir</a>
+            <a id="menuP" class="btn list-group-item list-group-item-action bg-dark text-light  d-block d-sm-none" ng-click="Cikis()">Çıkış <i class="fal fa-sign-out-alt float-right mt-2"></i></a>
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper" ng-if="!Istenilen">
+        <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom" style="height: 45px!important">
+            <a id="menu-toggle" class=" btn btn-sm d-md-none d-block" role="button" onclick="$('#wrapper').toggleClass('toggled')">
+                <span class="navbar-toggler-icon"></span>
+            </a>
+            <ul class="nav mt-lg-0 d-flex d-sm-none"   ng-if="filelocation[0].ID != -2">
+                <li class="nav-item dropdown">
+                    <a class=" dropdown-toggle nav-icon-font btn" id="yeniklasor" ng-click="openDrop('yenioption2')"><i class="fal fa-plus text-success"></i></a>
+                    <div class="dropdown-menu dropdown-menu-left" id="yenioption2" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" ng-click="BosDosyaAc(2)">Klasör</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a id="upload" class="btn nav-icon-font" role="button" ng-click="openModal('YeniDokumanModal');byteString = [];">
+                        <i class="fal fa-cloud-upload text-success"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="refresh" class="btn nav-icon-font" role="button" ng-click="RefreshList()">
+                        <i class="fal fa-redo-alt text-success"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" ng-click="openDrop('logoption2')">
+                        {{Menu.KullaniciAdSoyad}}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" id="logoption2" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#/ayarlar" ng-cloak ng-if="Menu.Ref_Unvan!=3">Ayarlar</a>
+                        <a class="dropdown-item" ng-click="ParolaY()">Parola Değiştir</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="Cikis()">Çıkış <i class="fal fa-sign-out-alt float-right mt-2"></i></a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="nav mt-lg-0 d-nano d-sm-flex"   ng-if="filelocation[0].ID != -2">
+                <li class="nav-item dropdown">
+                    <a class=" dropdown-toggle nav-icon-font btn" id="yeniklasor" ng-click="openDrop('yenioption')"><i class="fal fa-plus text-success"></i><span class="mx-2">Yeni</span></a>
+                    <div class="dropdown-menu dropdown-menu-left" id="yenioption" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" ng-click="BosDosyaAc()">Klasör</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a id="upload" class="btn nav-icon-font" role="button" ng-click="openModal('YeniDokumanModal');byteString = [];">
+                        <i class="fal fa-cloud-upload text-success"></i><span class="mx-2">Yükle</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="refresh" class="btn nav-icon-font" role="button" ng-click="RefreshList()">
+                        <i class="fal fa-redo-alt text-success"></i><span class="mx-2">Yenile</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav ml-auto mt-lg-0 d-none d-sm-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" ng-click="openDrop('logoption')">
+                        {{Menu.KullaniciAdSoyad}}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" id="logoption" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#/ayarlar" ng-cloak ng-if="Menu.Ref_Unvan!=3">Ayarlar</a>
+                        <a class="dropdown-item" ng-click="ParolaY()">Parola Değiştir</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="Cikis()">Çıkış <i class="fal fa-sign-out-alt float-right mt-2"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <nav class="navbar navbar-expand-sm navbar-white bg-white border-bottom p-0" style="height: 25px!important">
+            <button id="backpage" class="btn border-left border-right py-0" type="button" ng-disabled="filelocation.length<=1" ng-click="UpFolder()">
+                <i class="fa fa-level-up text-success nav-icon-font" style="font-weight:500"></i>
+            </button>
+            <ul class="nav mr-auto m-0">
+                <li>
+                    <a class=" py-0 pl-1 pr-2">Dosyalar</a>
+                </li>
+                <li ng-repeat="a in filelocation | limitTo:-10" class="d-none d-sm-block">
+                    <button class="btn nav-link p-0  pr-2" type="button" ng-disabled="$last" ng-click="BackFolder(a,$index)"><i class="fa fa-caret-right mr-1"></i>{{a.Adi}}</button>
+                </li>
+            </ul>
+            <ul class="nav ml-auto m-0 viewList d-none d-sm-block">
+                <li class="btn border-left py-0">
+                    <a class="btn nav-link p-0 " id="viewk" ng-click="GorunumSekli('k')"><i class="fas fa-th-large"></i></a>
+                </li>
+                <li class="btn border-left py-0">
+                    <a class="btn nav-link p-0 active" id="viewt" ng-click="GorunumSekli('t')"><i class="fa fa-bars mr-1"></i></a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container-fluid" style="height:calc(100vh - 100px);overflow:auto">
+            <div id="viewk-content" ng-if="viewList=='t'">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="p-2 text-left" ng-click="sortBy('Adi')">Adı</th>
+                            <th class="p-2 text-center" width="10%" ng-click="sortBy('Tarih')">Değiştirme Tarih</th>
+                            <th class="p-2 text-center" width="10%" ng-click="sortBy('Boyut')">Boyut</th>
+                            <th class="d-sm-none"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="bosDosya">
+                            <td style="width: 30px;cursor: pointer">
+                                <a class="p-1"><i class="icon folder fa-3x "></i></a>
+                            </td>
+                            <td class="pt-4"><input id="bosDosyain" type="text" class="form-control form-control-sm w-50 " style="min-width:140px" ng-model="yenidosyaAdi" ng-enter="YeniKlasorKaydet(yenidosyaAdi)" ng-blur="YeniKlasorKaydet(yenidosyaAdi)" autocomplete="off" /></td>
+                            <td class="pt-4"></td>
+                            <td class="pt-4"></td>
+                        </tr>
+                        <tr ng-repeat="a in GosterimListesi  | orderBy:['-IsFolder']" id="tbl{{$index}}" ng-click="SelectActive('tbl'+$index)" ng-right-click="OpenMenu($event,a,'tbl'+$index)">
+                            <td style="width: 30px;cursor: pointer" ng-click="OpenFolder(a)">
+                                <div ng-if="a.Type=='.pdf' || a.Type=='.docx'|| a.Type=='.doc' || a.Type=='.rtf' || a.IsFolder">
+                                    <a class="p-1 "><i class="icon {{a.IsFolder?'folder':((a.Type=='.docx'||a.Type=='.doc'||a.Type=='.rtf')?'word':(a.Type=='.pdf'?'pdf':''))}}  fa-3x "></i></a>
+                                </div>
+                                <div ng-if="a.Type=='.PNG' ||a.Type=='.png' || a.Type=='.jpg'|| a.Type=='.jpeg'">
+                                    <a class="p-1 "><i class="icon fa-image fa-3x "></i></a>
+                                </div>
+                                <div ng-if="a.Type=='.txt' ||a.Type=='.html'">
+                                    <a class="p-1 "><i class="icon other fa-3x "></i></a>
+                                </div>
+                            </td>
+                            <td class="pt-4">
+                                <span style="cursor: pointer" ng-click="OpenFolder(a)" ng-if="adDegisen!=('in'+a.ID)"><i ng-if="!a.Yetki" class="fa fa-lock-alt"></i> {{a.Adi}}</span>
+                                <input id="in{{a.ID}}" type="text" class="form-control form-control-sm w-50 d-none" style="min-width:140px" ng-model="eskiAd" ng-enter="DokumanDuzenleme(eskiAd)" ng-blur="DokumanDuzenleme(eskiAd)" autocomplete="off" />
+                            </td>
+                            <td class="pt-4 text-center">{{a.SonDuzTarihi}}</td>
+                            <td class="pt-4 text-center">{{a.Boyut}}</td>
+                            <td class="pt-4 px-3 d-block d-md-none" ng-if="!a.IsFolder"><a href="template/Onizleme.aspx?m={{a.ID}}&&d={{a.Type}}"><i class="fa fa-file-download"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="viewt-content" ng-if="viewList=='k'">
+                <div class=" p-3 noselect">
+                    <ul class="m-0 p-0">
+                        <li class="mx-2 p-3 front" id="klsyeni" style="cursor: pointer; display: block; float: left; height: 110px" ng-if="bosDosya">
+                            <div class="text-center">
+                                <a class="p-1 "><i class="icon folder fa-3x "></i></a>
+                                <div>
+                                    <input id="bosDosya" type="text" class="form-control form-control-sm w-50" style="min-width:140px" ng-model="yenidosyaAdi" ng-enter="YeniKlasorKaydet(yenidosyaAdi)" ng-blur="YeniKlasorKaydet(yenidosyaAdi)" autocomplete="off" />
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mx-2 p-3 front" ng-repeat="a in GosterimListesi | orderBy:['-IsFolder']" id="kls{{$index}}" ng-click="SelectActive('kls'+$index)" ng-right-click="OpenMenu($event,a,'kls'+$index,a.Yetki)" style="cursor: pointer; display: block; float: left; height: 110px">
+                            <div class="text-center">
+                                <div ng-click="OpenFolder(a)">
+                                    <a class="p-1 " ng-if="a.Type=='.pdf' || a.Type=='.docx'||  a.Type=='.rtf'|| a.IsFolder"><i class="icon {{a.IsFolder?'folder':''}} {{(a.Type=='.docx'||a.Type=='.rtf')?'word':(a.Type=='.pdf'?'pdf':'')}}  fa-3x "></i></a>
+                                    <a class="p-1 " ng-if="a.Type=='.PNG' ||a.Type=='.png' || a.Type=='.jpg'|| a.Type=='.jpeg'"><i class="icon fa-image fa-3x "></i></a>
+                                    <a class="p-1 " ng-if="a.Type=='.txt' ||a.Type=='.html' "><i class="icon other fa-3x "></i></a>
+                                </div>
+                                <div>
+                                    <label class="text-center text-dark" style="width: 100px" ng-if="adDegisen!=('in'+a.ID)" ng-click="OpenFolder(a)"><i ng-if="!a.Yetki" class="fa fa-lock-alt"></i> {{a.Adi}}</label>
+                                    <input id="in{{a.ID}}" type="text" class="form-control form-control-sm d-none" style="width:100px" ng-model="eskiAd" ng-enter="DokumanDuzenleme(eskiAd)" ng-blur="DokumanDuzenleme(eskiAd)" autocomplete="off" />
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id='cntnr' class="cntnr">
+                <ul id='items'>
+                    <li ng-if="false"><button class="border-0 btn-block py-2 text-left disabled" ng-click="RevizyonEkle()">Revizyon Ekle</button></li>
+                    <li><button class="border-0 btn-block py-2 text-left" ng-disabled="!duzenleme" ng-click="Arsivle()" ng-if="filelocation[0].ID != Menu.KullaniciPath">{{Arsivde?'Arşivden Çek':'Arşive Ekle'}}</button></li>
+                    <li><button class="border-0 btn-block py-2 text-left" ng-disabled="!duzenleme" ng-click="YetkiVer()"ng-if="!(Kdizin || filelocation[0].ID == -2)">Yetki Ver</button></li>
+                    <li><button class="border-0 btn-block py-2 text-left" ng-disabled="!duzenleme" ng-click="AdiniDegistir()">Adını Değiştir</button></li>
+                    <li><button class="border-0 btn-block py-2 text-left" ng-disabled="!duzenleme" ng-click="DokumanSil()">Sil</button></li>
+                </ul>
+            </div>
+            <div id='cntnrmain' class="cntnr" ng-if="false"> <!--kullanılmıyor-->
+                <ul id='items'>
+                    <li class="aali" ng-click="ItemDuzenle()">Yeni klasör</li>
+                    <li class="aali" ng-click="ItemSil()">Kopyala</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="page-content-wrapper" ng-if="Istenilen">
+        <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom" style="height: 45px!important">
+            <a id="menu-toggle" class=" btn btn-sm d-md-none d-block" role="button" onclick="$('#wrapper').toggleClass('toggled')">
+                <span class="navbar-toggler-icon"></span>
+            </a>
+            <ul class="nav ml-auto mt-lg-0 d-none d-sm-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" ng-click="openDrop('logoption')">
+                        {{Menu.KullaniciAdSoyad}}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" id="logoption" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#/ayarlar" ng-cloak ng-if="Menu.Ref_Unvan!=3">Ayarlar</a>
+                        <a class="dropdown-item">Parola Değiştir</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ng-click="Cikis()">Çıkış <i class="fal fa-sign-out-alt float-right mt-2"></i></a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <nav class="navbar navbar-expand-sm navbar-white bg-white border-bottom p-0" style="height: 35px!important">
+            <h5 class="pl-5">Firma Tarafından İstenilen Belgeler</h5>
+        </nav>
+        <input type="file" id="istbelfile" class="d-none" name="istbelfile_uploads" accept=".jpg, .jpeg, .png,.pdf" onchange="angular.element(this).scope().encodeistbelfile_uploads(this);" />
+        <div class="row pt-3  align-content-start ml-auto" style="height:calc(100vh - 120px);overflow:auto;margin-right:0px;">
+            <div class="col-sm-{{IstBelgeler.length<20?'2':'1'}} text-center mb-2 mx-4 small" ng-repeat="bel in IstBelgeler" style="max-height: 155px !important;min-width:115px!important">
+                <div class="p-0" style="height:40px;border-bottom:5px solid {{bel.Boyut!=null?'#46d667c9':' #ffc107'}} !important" title="{{bel.Adi}}"><span>{{bel.Adi | limitTo:15 }}{{bel.Adi.length>15?'...':''}} </span><a class="btn btn-sm py-0" ng-if="bel.Boyut!=null && bel.ID!=0" ng-click="OpenFolder(bel)"> <i class="fal fa-print"></i></a></div>
+                <a class="btn btn-sm btn-block border" style="height:70px;background-color:#e2e1e1" ng-click="IstBelSelect(bel)">
+                    Dosya Seç <br /><small class="text-success" title="{{bel.MevcutDosya}}">{{bel.MevcutDosya | limitTo:14}}{{bel.MevcutDosya.length>14?'...':''}}</small><br /><small class="text-danger" title="{{bel.SeciliDosya}}">{{bel.SeciliDosya | limitTo:14 }}{{bel.SeciliDosya.length>14?'...':''}}</small>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <div id="YeniDokumanModal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span ng-if="filelocation.length>3">../</span><span ng-repeat="a in filelocation | limitTo:-3">{{a.Adi}} /</span> </h5>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-12" id="loading-bar-container"></div>
+                    <div class="py-2 mb-2 col-4 text-center border-right">
+                        <a id="upload" class="btn border nav-icon-font" role="button" onclick="$('#fileinput').trigger('click')">
+                            <i class="fal fa-file-upload "></i><span class="mx-2">Yükle</span>
+                        </a>
+                        <input type="file" id="fileinput" class="d-none" multiple name="image_uploads" accept=".jpg, .jpeg, .png,.doc,.docx,.pdf,.html,.txt,.rtf" onchange="angular.element(this).scope().encodeImgtoBase64angular(this);" />
+                        <p class="p-0 m-0 text-center"><small><b>***</b> Sadece ".jpg, .jpeg, .png,.doc,.docx,.pdf,.html,txt" formatlarında yükleme yapınız.</small></p>
+                    </div>
+                    <div class="col-8 ">
+                        <div class="w-75 mx-auto">
+                            <h6>Seçilen Dokumanlar</h6>
+                            <ul>
+                                <li ng-repeat="f in byteString"> <small>{{f.Adi}}</small></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" ng-if="kayitloading">
+                    <span>
+                        <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                             viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve" style="width:50px;height:50px">
+                        <circle fill="#000" stroke="none" cx="6" cy="50" r="6">
+                        <animate attributeName="opacity"
+                                 dur="1s"
+                                 values="0;1;0"
+                                 repeatCount="indefinite"
+                                 begin="0.1" />    
+                                  </circle>
+                        <circle fill="#000" stroke="none" cx="26" cy="50" r="6">
+                        <animate attributeName="opacity"
+                                 dur="1s"
+                                 values="0;1;0"
+                                 repeatCount="indefinite"
+                                 begin="0.2" />       
+                                  </circle>
+                        <circle fill="#000" stroke="none" cx="46" cy="50" r="6">
+                        <animate attributeName="opacity"
+                                 dur="1s"
+                                 values="0;1;0"
+                                 repeatCount="indefinite"
+                                 begin="0.3" />     
+                                  </circle>
+                                </svg>
+                    </span>
+                </div>
+                <div class="modal-footer" ng-if="!kayitloading">
+                    <a class="btn btn-primary btn-sm text-white  pointer" ng-click="YeniDokumanEkle(byteString)">Ekle</a>
+                    <a class="btn btn-primary btn-sm text-white  pointer" ng-click="YeniDokumanZipEkle(byteString)">zip Ekle</a>
+                    <a class="btn btn-secondary btn-sm text-white pointer" data-dismiss="modal">İptal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dokumanyetkimodal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{selectInput.Adi}} - YETKİLER</h5>
+                </div>
+                <div class="modal-body row align-content-start" style="min-height:200px">
+                    <div class="col-6 " ng-repeat="y in dyetkiler">
+                        <div class="custom-control custom-checkbox mr-sm-2">
+                            <input type="checkbox" class="custom-control-input" id="customControlAutosizing1{{y.YetkiID}}" ng-model="y.Value">
+                            <label class="custom-control-label" for="customControlAutosizing1{{y.YetkiID}}">{{y.YetkiAdi}}</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary btn-sm text-white  pointer" ng-click="YetkiVerKaydet(dyetkiler)">Kaydet</a>
+                    <a class="btn btn-secondary btn-sm text-white pointer" data-dismiss="modal">İptal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span ng-if="docLoading" style="height:100vh;width:100vw;position:absolute;z-index:1000">
+        <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+             viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve" style="width:100px;height:100px;position:absolute;left:45%;top:45%">
+        <circle fill="#000" stroke="none" cx="6" cy="50" r="6">
+        <animate attributeName="opacity"
+                 dur="1s"
+                 values="0;1;0"
+                 repeatCount="indefinite"
+                 begin="0.1" />    
+                                  </circle>
+        <circle fill="#000" stroke="none" cx="26" cy="50" r="6">
+        <animate attributeName="opacity"
+                 dur="1s"
+                 values="0;1;0"
+                 repeatCount="indefinite"
+                 begin="0.2" />       
+                                  </circle>
+        <circle fill="#000" stroke="none" cx="46" cy="50" r="6">
+        <animate attributeName="opacity"
+                 dur="1s"
+                 values="0;1;0"
+                 repeatCount="indefinite"
+                 begin="0.3" />     
+                                  </circle>
+                                </svg>
+    </span>
+</div>
