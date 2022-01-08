@@ -1,6 +1,6 @@
 # Doküman Yönetim Sistemi
 
-AngularJs ve .Net ile yapmış olduğum ilk projelerden biri. [Devexpress documents](https://demos.devexpress.com/RWA/Documents/)ten ilham alarak geliştirdim.
+AngularJs ve .Net ile yapmış olduğum ilk projelerden biri. [Devexpress documents](https://demos.devexpress.com/RWA/Documents/){:target="_blank"} ten ilham alarak geliştirdim.
 Projenin şimdiki versiyonu sadece belge ekleme , görüntüleme ve indirme üzerine çalışıyor. İlerki versiyonunda üzerinde düzenleme getirilmesi planlanmakta.
 Aynı zamanda şuanda webservis olan backend kısmı WebAPI olarak tekrar revize edilmekte.
 
