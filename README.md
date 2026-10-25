@@ -18,7 +18,9 @@ eklenir ve sadece kullanıcı ve firma yetkilisi görebilir.
 
 Kullanıcı kendisine ait alana belge ve klasör ekleyebilir. Sadece kendisi görebilir.
 
-Demoyu [buradan](http://demodocumentmanager.snevars.com/) inceleye bilirsiniz.
+Demoyu [buradan](https://demodocumentmanager.snevars.com/) inceleyebilirsiniz.
+
+**Demo giriş bilgileri:** `demo@demo.com` / `Demo1234`
 
 ## Kullanılan teknolojiler
 - AngularJS v1.2

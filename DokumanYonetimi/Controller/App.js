@@ -421,7 +421,7 @@ app.controller("mainController", ["$scope", "orderByFilter", '$http', 'Authentic
                 settingUpdated: function (key, oldValue, newValue) {
                     switch (key) {
                         case 'doc':
-                            iframe.src = '../template/Onizleme.aspx?m=' + newValue[0] + '&&d=' + newValue[1];
+                            iframe.src = window.DemoOnizleme ? window.DemoOnizleme(newValue[0], newValue[1]) : '../template/Onizleme.aspx?m=' + newValue[0] + '&&d=' + newValue[1];
                             break;
                     }
                 },
